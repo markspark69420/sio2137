@@ -1,51 +1,60 @@
-#include<iostream>
-#include<string>
-#include<algorithm>
-#include<queue>
+#include<bits/stdc++.h>
 
 using namespace std;
 
+bool tab[1000][1000];
+int t, row, col, counter;
+
+struct entry{
+    int x;
+    int y;
+    int t;
+};
+
+queue<entry> q;
+
+void bfs(){
+    entry c;
+    while(!q.empty()){
+        c = q.front();
+        q.pop();
+        //cout << "looking at:" << c.x << ", " << c.y << ", " << c.t << '\n';
+        if(tab[c.x][c.y]==true || c.t > t || c.x < 0 || c.x >= row || c.y < 0 || c.y >= col){
+            //cout << "ignored: " << c.x << ", " << c.y << ", " << c.t << '\n';
+            continue;
+        }
+        tab[c.x][c.y] = true;
+        //cout << "marked " << c.x << ", " << c.y << '\n'; 
+        counter++;
+        q.push({c.x-1, c.y, c.t+1});
+        q.push({c.x+1, c.y, c.t+1});
+        q.push({c.x, c.y-1, c.t+1});
+        q.push({c.x, c.y+1, c.t+1});
+    }
+}
+
 int main(){
-    ios_base::sync_with_stdio(0);
+    ios_base::sync_with_stdio(false);
+    cout.tie(0);
     cin.tie(0);
-
-    int m, n, t;
-    cin >> m >> n >> t;
-    int dist[m+2][n+2];
-    char temp[n];
-    if(t>=(m+n-2)){
-        for(int i=0; i<m; i++){
-            cin >> temp;
-            for(unsigned int j=0; j<n; j++){
-                if(temp[j]=='x'){
-                    cout << n*m << '\n';
-                    for(int x=1; x<m+1; x++){
-                        for(int d=1; d<n+1; d++){
-                            cout << x << ' ' << d << '\n';
-                        }
-                    }
-                    return 0;
-                }
+    cin >> row >> col >> t;
+    char curr;
+    for(int i=0; i<row; i++){
+        for(int j=0; j<col; j++){
+            cin >> curr;
+            if(curr == 'x'){
+                //cout << "pushed: " <<  i << ", " << j << '\n';
+                q.push({i, j, 0});
             }
         }
     }
-    //fill( &dist[0][0], &dist[0][0] + sizeof(dist) / sizeof(dist[0][0]) , -1);
-    queue<int> q;
-
-    for(int i=1; i<m+1; i++){
-        cin >> temp;
-        for(int j=1; j<n+1; j++){
-            if(temp[j-1]=='x'){
-                dist[i][j] = 0;
-            }else{
-                dist[i][j] = -1;
+    bfs();
+    cout << counter << '\n';
+    for(int i=0; i<row; i++){
+        for(int j=0; j<col; j++){
+            if(tab[i][j]){
+                cout << i+1 << ' ' << j+1 << '\n';
             }
         }
-    }
-    for(int i =1; i<m+1; i++){
-        for(int j=1; j<n+1; j++){
-            cout << ((dist[i][j]!=-1)?'x':'.');
-        }
-        cout << '\n';
     }
 }
