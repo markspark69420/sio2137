@@ -28,13 +28,11 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cin >> n;
-    //cout << n;
     for(int i=0; i<n; i++){
         for(int j=0; j<n; j++){
             mem[i][j] = -1;
             cin >> land[i][j];
         }
     }
-    //cout << "fin";
     cout << walk(0,0);
 }
